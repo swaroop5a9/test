@@ -31,10 +31,10 @@ class Login extends React.Component {
         isError: true
       });
     } else {
-      var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/.test(
-        this.state.login.password
-      );
-      if (this.state.login.password.length > 8 && regex === true) {
+      let specialCharCheck = /[!@#$%^&*(),.?":{}|<>]/g;
+      let passwordCheck = /^((?=.*[A-Z]))/;
+      let isCheck = passwordCheck.test(this.state.login.password);
+      if (this.state.login.password.length > 8 && isCheck && specialCharCheck) {
         this.setState(
           {
             isError: false
@@ -45,7 +45,7 @@ class Login extends React.Component {
         this.setState({
           isError: true,
           errorMessage:
-            "Password Should contain atleast One Number, One UpperCase and a lowercase letter"
+            "Password Should contain atleast One UpperCase and a special character."
         });
       }
     }
@@ -111,8 +111,8 @@ const styles = {
   },
   loginButton: {
     marginTop: "32px",
-    background: "#2196F3",
-    border: "1px solid #2196F3",
+    background: "#1565C0",
+    border: "1px solid #1565C0",
     padding: "12px",
     width: "100%",
     color: "#fff"

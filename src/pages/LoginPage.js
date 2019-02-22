@@ -26,7 +26,7 @@ const styles = {
   header: {
     padding: 16,
     textAlign: "center",
-    background: "#2196F3"
+    background: "#1565C0"
   },
   title: {
     margin: 0,
