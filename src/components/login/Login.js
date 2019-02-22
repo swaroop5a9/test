@@ -5,61 +5,47 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {
-        username: "",
+      login: {
+        userName: "",
         password: ""
-        //   selected: [],
       },
-      uerror: false,
-      perror: false
+      errorMessage: "",
+      isError: false
     };
   }
 
   handleChange = event => {
     const eve = { ...event };
     this.setState(prevState => ({
-      user: {
-        ...prevState.user,
+      login: {
+        ...prevState.login,
         [eve.target.name]: eve.target.value
       }
     }));
   };
 
-  toggleDrawer = (side, open) => () => {
-    this.setState({
-      [side]: open
-    });
-  };
-
-  handleClick = () => {
-    if (this.state.user.username === "" || this.state.user.password === "") {
-      if (this.state.user.username === "") {
-        this.setState({
-          uerror: true
-        });
-      } else {
-        this.setState({
-          uerror: false
-        });
-      }
-      if (this.state.user.password === "") {
-        this.setState({
-          perror: true
-        });
-      } else {
-        this.setState({
-          perror: false
-        });
-      }
+  handleSubmit = event => {
+    event.preventDefault();
+    if (this.state.login.userName === "" || this.state.login.password === "") {
+      this.setState({
+        isError: true
+      });
     } else {
-      var regex = /^(?=.*?[A-Z])(?=.*?[#?!@$%^&*-]).{8,}$/.test(
-        this.state.user.password
+      var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/.test(
+        this.state.login.password
       );
-      if (this.state.user.password.length > 8 && regex === true) {
-        this.props.history.push("/home");
+      if (this.state.login.password.length > 8 && regex === true) {
+        this.setState(
+          {
+            isError: false
+          },
+          this.props.history.push("/home")
+        );
       } else {
         this.setState({
-          perror: false
+          isError: true,
+          errorMessage:
+            "Password Should contain atleast One Number, One UpperCase and a lowercase letter"
         });
       }
     }
@@ -67,39 +53,74 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>Login Page</h1>
-        <div>
+      <form style={styles.loginForm} onSubmit={this.handleSubmit}>
+        <div style={styles.inputFiledGroup}>
           <input
-            required={true}
+            required
             type="text"
-            id="username"
-            name="username"
+            name="userName"
+            placeholder="Username"
+            style={styles.inputFiled}
+            value={this.state.login.userName}
             onChange={this.handleChange}
           />
-          {this.state.uerror && <p>Invalid user details</p>}
-          <br />
-          <br />
-          <input
-            required={true}
-            type="password"
-            id="password"
-            name="password"
-            onChange={this.handleChange}
-          />
-          {this.state.perror && <p>Invalid password details</p>}
+          {this.state.isError && this.state.login.userName === "" && (
+            <p style={styles.errorText}>Please enter Username</p>
+          )}
         </div>
-        <br />
+        <div style={styles.inputFiledGroup}>
+          <input
+            required
+            type="password"
+            name="password"
+            placeholder="Password"
+            style={styles.inputFiled}
+            value={this.state.login.password}
+            onChange={this.handleChange}
+          />
+          {this.state.isError && this.state.login.password === "" && (
+            <p style={styles.errorText}>Please enter password</p>
+          )}
+        </div>
+        {this.state.isError && this.state.errorMessage !== "" && (
+          <p style={styles.errorText}>{this.state.errorMessage}</p>
+        )}
         <div>
-          <button id="login" name="login" onClick={() => this.handleClick()}>
+          <button style={styles.loginButton} type="submit">
             Login
           </button>
         </div>
-
-        <br />
-      </div>
+      </form>
     );
   }
 }
+
+const styles = {
+  loginForm: {
+    padding: 16
+  },
+  inputFiledGroup: {
+    margin: "16px 0"
+  },
+  inputFiled: {
+    width: "100%",
+    border: "none",
+    borderBottom: "1px solid #ddd",
+    padding: "8px 12px",
+    boxSizing: "border-box"
+  },
+  loginButton: {
+    marginTop: "32px",
+    background: "#2196F3",
+    border: "1px solid #2196F3",
+    padding: "12px",
+    width: "100%",
+    color: "#fff"
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12
+  }
+};
 
 export default withRouter(Login);
