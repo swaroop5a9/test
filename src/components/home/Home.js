@@ -1,5 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
+import Diamond from "mdi-material-ui/Diamond";
+import TrashCanOutline from "mdi-material-ui/TrashCanOutline";
 
 class Home extends React.Component {
   constructor(props) {
@@ -16,9 +18,6 @@ class Home extends React.Component {
       ]
     };
   }
-  navigateToHome = () => {
-    this.props.history.push("/");
-  };
 
   deleteItem = index => {
     let items = [...this.state.listItems];
@@ -31,20 +30,46 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-        {/* <Card> */}
-        <h1>Home</h1>
-        <button onClick={this.navigateToHome}>Back to home page</button>
-        <ul>
+        <ul style={styles.ul}>
           {this.state.listItems.map((item, index) => (
-            <div key={index}>
-              <li>{item}</li>
-              <button onClick={() => this.deleteItem(index)}>Delete</button>
-            </div>
+            <li key={index} style={styles.li}>
+              <div style={styles.flex}>
+                <Diamond style={styles.leftIcon} />
+                <span>{item}</span>
+              </div>
+              <TrashCanOutline
+                style={styles.deleteIcon}
+                onClick={() => this.deleteItem(index)}
+              />
+            </li>
           ))}
         </ul>
       </div>
     );
   }
 }
+
+const styles = {
+  ul: {
+    listStyle: "none",
+    paddingLeft: 0
+  },
+  li: {
+    padding: 16,
+    borderBottom: "2px solid #eceaea",
+    display: "flex",
+    justifyContent: "space-between"
+  },
+  flex: {
+    display: "flex"
+  },
+  leftIcon: {
+    marginRight: 12
+  },
+  deleteIcon: {
+    cursor: "pointer",
+    color: "red"
+  }
+};
 
 export default withRouter(Home);
